@@ -11,4 +11,5 @@ Features:
 # Install
 
 To download, just click on "Clone or download" and download the zip.
+
 To install it, follow the instructions on the EDMC Github page: https://github.com/Marginal/EDMarketConnector#plugins
