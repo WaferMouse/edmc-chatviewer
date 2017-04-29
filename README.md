@@ -7,3 +7,8 @@ Features:
 * Supports hyperlinks with a right-click menu to copy to the clipboard.
 * Outputs the system name when you start a hyperspace jump, with a link to EDSM and a right-click menu to copy to the clipboard.
 * "Freeze" button to stop the chat from dropping to the bottom when a new message arrives, useful for if you're scrolling back whilst people are still talking.
+
+# Install
+
+To download, just click on "Clone or download" and download the zip.
+To install it, follow the instructions on the EDMC Github page: https://github.com/Marginal/EDMarketConnector#plugins
