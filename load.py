@@ -144,13 +144,20 @@ def journal_entry(cmdr, system, station, entry):
   if event == "SendText":
     sender = cmdr
     display = True
-    channel = entry['To'][0]
+    if entry['To'][:21] == "$cmdr_decorate:#name=":
+      channel = entry['To'][21:-1]
+    else:
+      channel = entry['To'][0]
   elif event == "ReceiveText":
     sender = entry["From"]
     if sender[:21] == "$cmdr_decorate:#name=":
       sender = sender[21:-1]
-      channel = entry["Channel"][0]
       display = True
+    elif sender[0] == "&":
+      sender = sender[1:]
+      display = True
+    if display:
+      channel = entry["Channel"][0]
   elif event == "FSDJump" or event == "StartJump":
     formtext = {"FSDJump": "Arrived at",
                 "StartJump": "Jumping to",
