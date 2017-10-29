@@ -2,6 +2,7 @@ import Tkinter as tk
 from urlparse import urlparse
 import webbrowser
 from urllib import quote_plus
+import ttk
 
 debugoutput = False
 links = []
@@ -87,13 +88,43 @@ def linkpopup(event):
 def popup(event):
     plugin_app.menu.post(event.x_root, event.y_root)
 
+class ToggledFrame(tk.Frame):
+
+    def __init__(self, parent, text="", *args, **options):
+        tk.Frame.__init__(self, parent, *args, **options)
+
+        self.show = tk.IntVar()
+        self.show.set(0)
+        self.text = text
+
+        self.title_frame = tk.Frame(self)
+        self.title_frame.pack(fill="x", expand=1)
+
+        #ttk.Label(self.title_frame, text=text).pack(side="left", fill="x", expand=1)
+
+        self.toggle_button = ttk.Checkbutton(self.title_frame, text= unichr(9532) + ' ' + text, command=self.toggle,
+                                            variable=self.show, style='Toolbutton')
+        self.toggle_button.pack(side="left")
+
+        self.sub_frame = tk.Frame(self, relief="sunken", borderwidth=1)
+
+    def toggle(self):
+        if bool(self.show.get()):
+            self.sub_frame.pack(fill="x", expand=1)
+            self.toggle_button.configure(text=unichr(9472) + ' ' + self.text)
+        else:
+            self.sub_frame.forget()
+            self.toggle_button.configure(text= unichr(9532) + ' ' + self.text)
+
 def plugin_app(parent):
   """
   Create a TK widget for the EDMC main window
   """
   plugin_app.frame = tk.Frame(parent)
-  plugin_app.status = tk.Text(plugin_app.frame)
-  plugin_app.chatcopy = tk.Button(plugin_app.frame, text = "Copy", command = copy_button3)
+  plugin_app.collapser = ToggledFrame(plugin_app.frame, text = "Chat Viewer", relief = "raised", borderwidth = 1)
+  plugin_app.collapser.pack(fill="x", expand=1, pady=2, padx=2, anchor="n")
+  plugin_app.status = tk.Text(plugin_app.collapser.sub_frame)
+  plugin_app.chatcopy = tk.Button(plugin_app.collapser.sub_frame, text = "Copy", command = copy_button3)
   plugin_app.chatcopy.grid(row = 1, column = 0, columnspan = 4)
   plugin_app.status['width'] = 27
   plugin_app.status.grid(row=0, column = 0, columnspan = 3)
@@ -109,18 +140,18 @@ def plugin_app(parent):
   plugin_app.status.tag_config('systemlink', underline=1)
   plugin_app.status.tag_bind('systemlink', '<Button-1>', showSystem)
   plugin_app.status.tag_bind('systemlink', '<Button-3>', lambda e, w='systemlink': on_tag_click(e, w))
-  plugin_app.freeze = tk.IntVar(plugin_app.frame)
-  plugin_app.freezebutton = tk.Checkbutton(plugin_app.frame, text="Freeze", variable = plugin_app.freeze)
+  plugin_app.freeze = tk.IntVar(plugin_app.collapser.sub_frame)
+  plugin_app.freezebutton = tk.Checkbutton(plugin_app.collapser.sub_frame, text="Freeze", variable = plugin_app.freeze)
   plugin_app.freezebutton.grid(row=2, column = 0, columnspan = 4)
-  plugin_app.scroll = tk.Scrollbar(plugin_app.frame, command=plugin_app.status.yview)
+  plugin_app.scroll = tk.Scrollbar(plugin_app.collapser.sub_frame, command=plugin_app.status.yview)
   plugin_app.scroll.grid(row=0, column=4, sticky='nsew')
   plugin_app.status['yscrollcommand'] = plugin_app.scroll.set
-  plugin_app.systemMenu = tk.Menu(plugin_app.frame, tearoff=0)
+  plugin_app.systemMenu = tk.Menu(plugin_app.collapser.sub_frame, tearoff=0)
   plugin_app.systemMenu.add_command(label="Copy system name", command = copySystem)
   plugin_app.systemMenu.add_command(label="Copy EDSM link", command = copySystemLink)
-  plugin_app.menu = tk.Menu(plugin_app.frame, tearoff=0)
+  plugin_app.menu = tk.Menu(plugin_app.collapser.sub_frame, tearoff=0)
   plugin_app.menu.add_command(label="Copy text (Ctrl x)", command = copy_button3)
-  plugin_app.linkMenu = tk.Menu(plugin_app.frame, tearoff=0)
+  plugin_app.linkMenu = tk.Menu(plugin_app.collapser.sub_frame, tearoff=0)
   plugin_app.linkMenu.add_command(label="Copy link", command = copyLink)
   print "Chat Viewer loaded"
   return (plugin_app.frame)
