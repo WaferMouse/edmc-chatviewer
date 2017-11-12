@@ -175,16 +175,19 @@ def journal_entry(cmdr, system, station, entry):
   if event == "SendText":
     sender = cmdr
     display = True
-    if entry['To'][:21] == "$cmdr_decorate:#name=":
-      channel = entry['To'][21:-1]
-    else:
+    if entry['To'] in ["wing","voicechat","local"]:
       channel = entry['To'][0].upper()
+    else:
+      channel = entry['To']
   elif event == "ReceiveText":
     sender = entry["From"]
     try:
       if entry["Channel"] != "npc":
         display = True
-        channel = entry["Channel"][0].upper()
+        if entry["Channel"] == "player":
+          channel = "D"
+        else:
+          channel = entry["Channel"][0].upper()
     except:
       channel = "L"
       display = True
