@@ -56,7 +56,7 @@ def plugin_start():
   Load this plugin into EDMC
   """
   print "Chat Viewer started"
-  return "Chat Viewer"
+  return "zz Chat Viewer"
 
 def showLink(event):
     idx = int(event.widget.tag_names(tk.CURRENT)[1])
