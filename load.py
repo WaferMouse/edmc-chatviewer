@@ -102,7 +102,7 @@ class ToggledFrame(tk.Frame):
 
         #ttk.Label(self.title_frame, text=text).pack(side="left", fill="x", expand=1)
 
-        self.toggle_button = ttk.Checkbutton(self.title_frame, text= unichr(9532) + ' ' + text, command=self.toggle,
+        self.toggle_button = ttk.Checkbutton(self.title_frame, text= unichr(8862) + ' ' + text, command=self.toggle,
                                             variable=self.show, style='Toolbutton')
         self.toggle_button.pack(side="left")
 
@@ -111,10 +111,10 @@ class ToggledFrame(tk.Frame):
     def toggle(self):
         if bool(self.show.get()):
             self.sub_frame.pack(fill="x", expand=1)
-            self.toggle_button.configure(text=unichr(9472) + ' ' + self.text)
+            self.toggle_button.configure(text=unichr(8863) + ' ' + self.text)
         else:
             self.sub_frame.forget()
-            self.toggle_button.configure(text= unichr(9532) + ' ' + self.text)
+            self.toggle_button.configure(text= unichr(8862) + ' ' + self.text)
 
 def plugin_app(parent):
   """
