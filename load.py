@@ -94,34 +94,38 @@ class ToggledFrame(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **options)
 
         self.show = tk.IntVar()
-        self.show.set(0)
+        self.show.set(1)
         self.text = text
 
         self.title_frame = tk.Frame(self)
         self.title_frame.pack(fill="x", expand=1)
 
-        #ttk.Label(self.title_frame, text=text).pack(side="left", fill="x", expand=1)
-
-        self.toggle_button = ttk.Checkbutton(self.title_frame, text= unichr(8862) + ' ' + text, command=self.toggle,
-                                            variable=self.show, style='Toolbutton')
+        self.toggle_button = tk.Label(self.title_frame,text= unichr(8862) + ' ' + text)
         self.toggle_button.pack(side="left")
 
-        self.sub_frame = tk.Frame(self, relief="sunken", borderwidth=1)
+        self.sub_frame = tk.Frame(self, relief="groove", borderwidth=1)
 
-    def toggle(self):
-        if bool(self.show.get()):
-            self.sub_frame.pack(fill="x", expand=1)
-            self.toggle_button.configure(text=unichr(8863) + ' ' + self.text)
-        else:
-            self.sub_frame.forget()
-            self.toggle_button.configure(text= unichr(8862) + ' ' + self.text)
+        def toggle(self):
+            if bool(self.show.get()):
+                self.sub_frame.pack(fill="x", expand=1)
+                self.toggle_button.configure(text=unichr(8863) + ' ' + self.text)
+                self.show.set(0)
+            else:
+                self.sub_frame.forget()
+                self.toggle_button.configure(text= unichr(8862) + ' ' + self.text)
+                self.show.set(1)
+
+        def click(event):
+          toggle(self)
+
+        self.toggle_button.bind("<Button-1>",click)
 
 def plugin_app(parent):
   """
   Create a TK widget for the EDMC main window
   """
   plugin_app.frame = tk.Frame(parent)
-  plugin_app.collapser = ToggledFrame(plugin_app.frame, text = "Chat Viewer", relief = "raised", borderwidth = 1)
+  plugin_app.collapser = ToggledFrame(plugin_app.frame, text = "Chat Viewer")
   plugin_app.collapser.pack(fill="x", expand=1, pady=2, padx=2, anchor="n")
   plugin_app.status = tk.Text(plugin_app.collapser.sub_frame)
   plugin_app.chatcopy = tk.Button(plugin_app.collapser.sub_frame, text = "Copy", command = copy_button3)
