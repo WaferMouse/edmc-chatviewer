@@ -1,8 +1,24 @@
-import Tkinter as tk
-from urlparse import urlparse
+from __future__ import print_function
+
 import webbrowser
-from urllib import quote_plus
-import ttk
+#from urlparse import urlparse
+
+try:
+    # Python 2
+    from urllib import quote_plus
+    import Tkinter as tk
+    from urlparse import urlparse
+    import ttk
+except ImportError:
+    # Python 3
+    from urllib.parse import quote_plus
+    import tkinter as tk
+    from urllib.parse import urlparse
+    from tkinter import ttk
+
+#import Tkinter as tk
+#from urllib import quote_plus
+
 
 debugoutput = False
 links = []
@@ -51,12 +67,15 @@ def setclipboard(text):
   r.clipboard_append(text)
   r.destroy()
 
+def plugin_start3(plugin_dir):
+    return plugin_start()
+
 def plugin_start():
   """
   Load this plugin into EDMC
   """
-  print "Chat Viewer started"
-  return "zz Chat Viewer"
+  print("Chat Viewer started")
+  return "zz Chat Viewer - Python3 version"
 
 def showLink(event):
     idx = int(event.widget.tag_names(tk.CURRENT)[1])
@@ -87,6 +106,12 @@ def linkpopup(event):
 
 def popup(event):
     plugin_app.menu.post(event.x_root, event.y_root)
+    
+def expandedChr(c):
+    try:
+        return chr(c)
+    except ValueError:
+        return unichr(c)
 
 class ToggledFrame(tk.Frame):
 
@@ -100,7 +125,9 @@ class ToggledFrame(tk.Frame):
         self.title_frame = tk.Frame(self)
         self.title_frame.pack(fill="x", expand=1)
 
-        self.toggle_button = tk.Label(self.title_frame,text= unichr(8862) + ' ' + text)
+
+        self.toggle_button = tk.Label(self.title_frame,text= expandedChr(8862) + ' ' + text)
+            
         self.toggle_button.pack(side="left")
 
         self.sub_frame = tk.Frame(self, relief="groove", borderwidth=1)
@@ -108,11 +135,11 @@ class ToggledFrame(tk.Frame):
         def toggle(self):
             if bool(self.show.get()):
                 self.sub_frame.pack(fill="x", expand=1)
-                self.toggle_button.configure(text=unichr(8863) + ' ' + self.text)
+                self.toggle_button.configure(text=expandedChr(8863) + ' ' + self.text)
                 self.show.set(0)
             else:
                 self.sub_frame.forget()
-                self.toggle_button.configure(text= unichr(8862) + ' ' + self.text)
+                self.toggle_button.configure(text= expandedChr(8862) + ' ' + self.text)
                 self.show.set(1)
 
         def click(event):
@@ -157,10 +184,10 @@ def plugin_app(parent):
   plugin_app.menu.add_command(label="Copy text (Ctrl x)", command = copy_button3)
   plugin_app.linkMenu = tk.Menu(plugin_app.collapser.sub_frame, tearoff=0)
   plugin_app.linkMenu.add_command(label="Copy link", command = copyLink)
-  print "Chat Viewer loaded"
+  print("Chat Viewer loaded")
   return (plugin_app.frame)
 
-def journal_entry(cmdr, system, station, entry):
+def journal_entry(cmdr, is_beta, system, station, entry, state):
   global links
   global linkcount
   global systemlinks
